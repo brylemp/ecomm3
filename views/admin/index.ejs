@@ -6,12 +6,9 @@
     <title>Document</title>
 </head>
 <body>
-    <% for(let x of Object.keys(user)){ %>
-       <%= user[x] %>  
-       <%- '<br>' %> 
-    <% } %>  
+    <a href="/admin/product/add">Add New Product <br></a>
     <% for(let product of products){ %>
-        <%= product.title %>  
+        <%- `${product.title} - Php${product.price} - ${product.stock}pc/s <a href="/admin/product/edit/${product._id}">Edit</a> ` %>  
         <%- '<br>' %> 
      <% } %>  
 </body>

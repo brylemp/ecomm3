@@ -5,6 +5,7 @@ const MongoStore = require('connect-mongo')(session);
 require('dotenv').config()
 
 const authRouter = require('./routes/admin/auth')
+const adminRouter = require('./routes/admin/admin')
 
 mongoose.connect(process.env.mongoDBURI,{ useNewUrlParser: true,useUnifiedTopology: true }, ()=> console.log('Connected to mongoDB'))
 const app = express()
@@ -20,6 +21,7 @@ app.use(session({
 
 app.use(express.urlencoded({extended:true}))
 app.use(authRouter)
+app.use(adminRouter)
 
 app.get('/',(req,res)=>{
     res.send('wew')

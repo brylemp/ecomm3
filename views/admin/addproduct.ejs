@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    <a href="/admin">Back <br></a>
+    <form method="POST">
+        <% if(details.length===0){ %>
+            <%-` 
+            <input type="text" name="title" id="title" placeholder="title">
+            <input type="text" name="desc" id="desc" placeholder="description">
+            <input type="text" name="price" id="price" placeholder="price">
+            <input type="submit">
+            `%>
+        <%} else { %>
+            <%-`
+            <input type="text" name="title" id="title" placeholder="title" value="${details.title}">
+            <input type="text" name="desc" id="desc" placeholder="description" value="${details.desc}">
+            <input type="text" name="price" id="price" placeholder="price" value="${details.price}">
+            <input type="submit">
+            `%> 
+        <% } %>   
+        
+    </form>
+</body>
+</html>
