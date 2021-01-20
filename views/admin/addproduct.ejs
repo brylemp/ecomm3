@@ -14,16 +14,18 @@
             <input type="text" name="desc" id="desc" placeholder="description">
             <input type="text" name="price" id="price" placeholder="price">
             <input type="submit">
+            </form>
             `%>
         <%} else { %>
             <%-`
             <input type="text" name="title" id="title" placeholder="title" value="${details.title}">
             <input type="text" name="desc" id="desc" placeholder="description" value="${details.desc}">
             <input type="text" name="price" id="price" placeholder="price" value="${details.price}">
+            <input type="number" name="stock" id="stock" placeholder="${details.stock}" value="${details.stock}">
             <input type="submit">
+            </form>
+            <form method="POST" action="/admin/product/delete/${details._id}"><input type="submit" value="Delete"></form>
             `%> 
         <% } %>   
-        
-    </form>
 </body>
 </html>

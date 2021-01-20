@@ -43,8 +43,15 @@ router.get('/admin/product/edit/:id', async (req,res)=>{
 
 router.post('/admin/product/edit/:id', async (req,res)=>{
     const { id } = req.params
-    const { title, desc, price } = req.body
-    const product = await productModel.updateOne({ _id:id }, { title, desc, price })
+    const { title, desc, price, stock } = req.body
+    const product = await productModel.updateOne({ _id:id }, { title, desc, price, stock })
+    console.log(product)
+    res.redirect('/admin')
+})
+
+router.post('/admin/product/delete/:id', async (req,res)=>{
+    const { id } = req.params
+    const product = await productModel.deleteOne({_id:id})
     console.log(product)
     res.redirect('/admin')
 })
