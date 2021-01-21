@@ -4,12 +4,24 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Document</title>
+    <link rel="stylesheet" href="/css/admin/style.css">
 </head>
 <body>
+    <a href="/admin/logout">Logout<br></a>
     <a href="/admin/product/add">Add New Product <br></a>
-    <% for(let product of products){ %>
-        <%- `${product.title} - Php${product.price} - ${product.stock}pc/s <a href="/admin/product/edit/${product._id}">Edit</a> ` %>  
-        <%- '<br>' %> 
-     <% } %>  
+    <table>
+        <tr>
+            <th>Title</th>
+            <th>Price</th>
+            <th>Stock</th>
+            <th></th>
+        </tr>
+        
+        <% for(let product of products){ %>
+            <%- '<tr>' %> 
+            <%- `<td>${product.title}</td> <td>₱${product.price}</td> <td>${product.stock}pc/s</td> <td><a href="/admin/product/edit/${product._id}">Edit</a></td>` %> 
+            <%- '</tr>' %> 
+        <% } %>  
+    </table>    
 </body>
 </html>

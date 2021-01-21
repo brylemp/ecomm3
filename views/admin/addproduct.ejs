@@ -4,28 +4,36 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Document</title>
+    <link rel="stylesheet" href="/css/admin/addproduct.css">
 </head>
 <body>
     <a href="/admin">Back <br></a>
-    <form method="POST">
+    
         <% if(details.length===0){ %>
             <%-` 
-            <input type="text" name="title" id="title" placeholder="title">
-            <input type="text" name="desc" id="desc" placeholder="description">
-            <input type="text" name="price" id="price" placeholder="price">
-            <input type="submit">
+            <form method="POST">
+                <input type="text" name="title" id="title" placeholder="title">
+                <input type="text" name="desc" id="desc" placeholder="description">
+                <input type="text" name="price" id="price" placeholder="price">
+                <input type="submit">
             </form>
             `%>
         <%} else { %>
             <%-`
-            <input type="text" name="title" id="title" placeholder="title" value="${details.title}">
-            <input type="text" name="desc" id="desc" placeholder="description" value="${details.desc}">
-            <input type="text" name="price" id="price" placeholder="price" value="${details.price}">
-            <input type="number" name="stock" id="stock" placeholder="${details.stock}" value="${details.stock}">
-            <input type="submit">
-            </form>
-            <form method="POST" action="/admin/product/delete/${details._id}"><input type="submit" value="Delete"></form>
+            <div class="edit">
+                <form method="POST">
+                    <input type="text" name="title" id="title" placeholder="title" value="${details.title}"><br>
+                    <textarea name="desc" id="desc" cols="30" rows="10">${details.desc}</textarea><br>
+                    <input type="text" name="price" id="price" placeholder="price" value="${details.price}"><br>
+                    <input type="number" name="stock" id="stock" placeholder="${details.stock}" value="${details.stock}"><br>
+                    <input type="submit"><br><br><br><br>
+                </form>
+                <form method="POST" action="/admin/product/delete/${details._id}">
+                    <input type="submit" value="Delete">
+                </form>
+            </div>
             `%> 
         <% } %>   
+        
 </body>
 </html>

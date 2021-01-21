@@ -6,9 +6,21 @@
     <title>Login</title>
 </head>
 <body>
+    
     <form method="POST">
-        <input type="email" name="email" id="email">
-        <input type="password" name="password" id="password">
+        <% if(errors==='none'){ %>
+            <%- `
+                <input type="text" name="email" id="email"><br>
+                <input type="password" name="password" id="password"><br>
+            ` %> 
+        <% }else{ %>  
+            <%- `
+                <input type="text" name="email" id="email" value="${errors.email.value}">
+                <label>${errors.email.msg}</label><br>
+                <input type="password" name="password" id="password">
+                <label>${errors.password.msg}</label><br>
+            ` %> 
+            <% } %> 
         <input type="submit">
     </form>
 </body>

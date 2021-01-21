@@ -11,6 +11,7 @@ mongoose.connect(process.env.mongoDBURI,{ useNewUrlParser: true,useUnifiedTopolo
 const app = express()
 app.set('view engine','ejs')
 
+app.use(express.static('public'))
 app.use(session({
     secret: 'cat',
     store: new MongoStore({ mongooseConnection: mongoose.connection, dbName: 'sessions' }),
@@ -20,6 +21,7 @@ app.use(session({
 }));
 
 app.use(express.urlencoded({extended:true}))
+app.use(express.json())
 app.use(authRouter)
 app.use(adminRouter)
 
