@@ -1,6 +1,7 @@
 const express = require('express')
 const crypto = require('crypto')
 const util = require('util')
+const { check, validationResult } = require('express-validator');
 
 const adminModel = require('../../models/admin')
 const productModel = require('../../models/product')
@@ -24,11 +25,26 @@ router.get('/admin/product/add', async (req,res)=>{
     res.render('./admin/addproduct',{user:req.session.user,details:[]})
 })
 
-router.post('/admin/product/add', async (req,res)=>{
-    const { title, desc, price } = req.body
-    const product = await productModel.create({ title, desc, price })
-    console.log(product)
-    res.redirect('/admin')
+let productValidation = [
+    check('title').isLength({min:5, max:20}).withMessage('Title must be 5-20 characters long'),
+    check('desc').isLength({min:5, max:200}).withMessage('Description must be 5-200 characters long'),
+    check('price').toFloat().isFloat().withMessage('Price must be a number'),
+    check('stock').isInt({min:0,max:100}).withMessage('Stock must be a number from 0-100')
+]
+
+router.post('/admin/product/add', productValidation, async (req,res)=>{
+    const errors = validationResult(req);
+    
+    if (!errors.isEmpty()) {
+        console.log(errors.mapped())
+        res.render('./admin/addproduct',{details:[],errors:errors.mapped()})
+    }
+    else{
+        const { title, desc, price } = req.body
+        const product = await productModel.create({ title, desc, price })
+        console.log(product)
+        res.redirect('/admin')
+    }
 })
 
 router.get('/admin/product/edit/:id', async (req,res)=>{
@@ -38,15 +54,24 @@ router.get('/admin/product/edit/:id', async (req,res)=>{
     const id = req.params.id
     const details = await productModel.findOne({_id:id})
     console.log(details)
-    res.render('./admin/addproduct',{user:req.session.user,details})
+    res.render('./admin/addproduct',{details})
 })
 
-router.post('/admin/product/edit/:id', async (req,res)=>{
+router.post('/admin/product/edit/:id', productValidation, async (req,res)=>{
     const { id } = req.params
     const { title, desc, price, stock } = req.body
-    const product = await productModel.updateOne({ _id:id }, { title, desc, price, stock })
-    console.log(product)
-    res.redirect('/admin')
+    const errors = validationResult(req);
+    const details = await productModel.findOne({_id:id})
+
+    if (!errors.isEmpty()) {
+        console.log(errors.mapped())
+        res.render('./admin/addproduct',{details,errors:errors.mapped()})
+    }
+    else{
+        const product = await productModel.updateOne({ _id:id }, { title, desc, price, stock })
+        console.log(product)
+        res.redirect('/admin')
+    }
 })
 
 router.post('/admin/product/delete/:id', async (req,res)=>{

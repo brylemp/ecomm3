@@ -8,32 +8,33 @@
 </head>
 <body>
     <a href="/admin">Back <br></a>
-    
-        <% if(details.length===0){ %>
-            <%-` 
-            <form method="POST">
-                <input type="text" name="title" id="title" placeholder="title">
-                <input type="text" name="desc" id="desc" placeholder="description">
-                <input type="text" name="price" id="price" placeholder="price">
-                <input type="submit">
+    <form method="POST">
+        <div>
+            <input type="text" type="text" name="title" id="title" placeholder="title" value="<%= ((typeof(errors)==='undefined')?(details.title):((typeof(errors.title)==='undefined')?(details.title):(errors.title.value))) %>">
+            <label><%= ((typeof(errors)==='undefined')?(''):((typeof(errors.title)==='undefined')?(''):(errors.title.msg))) %></label>
+        </div>
+        <div>
+            <input type="text" name="desc" id="desc" placeholder="description" value="<%= ((typeof(errors)==='undefined')?(details.desc):((typeof(errors.description)==='undefined')?(details.desc):(errors.description.value))) %>">
+            <label><%= ((typeof(errors)==='undefined')?(''):((typeof(errors.desc)==='undefined')?(''):(errors.desc.msg))) %></label>
+        </div>
+        <div>
+            <input type="text" name="price" id="price" placeholder="price" value="<%= ((typeof(errors)==='undefined')?(details.price):((typeof(errors.price)==='undefined')?(details.price):(errors.price.value))) %>">
+            <label><%= ((typeof(errors)==='undefined')?(''):((typeof(errors.price)==='undefined')?(''):(errors.price.msg))) %></label>
+        </div>
+        <div>
+            <input type="number" name="stock" id="stock" placeholder="stock" value="<%= ((typeof(errors)==='undefined')?(details.stock):((typeof(errors.stock)==='undefined')?(details.stock):(errors.stock.value))) %>">
+            <label><%= ((typeof(errors)==='undefined')?(''):((typeof(errors.stock)==='undefined')?(''):(errors.stock.msg))) %></label>
+        </div>
+        <div>
+            <input type="submit">
+        </div>
+    </form>
+    <% if(details.length!==0){ %>
+        <%- `
+            <form method="POST" action="/admin/product/delete/${details._id}">
+                <input type="submit" value="Delete">
             </form>
-            `%>
-        <%} else { %>
-            <%-`
-            <div class="edit">
-                <form method="POST">
-                    <input type="text" name="title" id="title" placeholder="title" value="${details.title}"><br>
-                    <textarea name="desc" id="desc" cols="30" rows="10">${details.desc}</textarea><br>
-                    <input type="text" name="price" id="price" placeholder="price" value="${details.price}"><br>
-                    <input type="number" name="stock" id="stock" placeholder="${details.stock}" value="${details.stock}"><br>
-                    <input type="submit"><br><br><br><br>
-                </form>
-                <form method="POST" action="/admin/product/delete/${details._id}">
-                    <input type="submit" value="Delete">
-                </form>
-            </div>
-            `%> 
-        <% } %>   
-        
+        ` %> 
+    <% } %>  
 </body>
 </html>

@@ -13,10 +13,10 @@ router.get('/admin/login', async (req,res)=>{
     if(req.session.user){
         return res.redirect('/admin')
     }
-    res.render('./admin/login',{errors:'none'})
+    res.render('./admin/login')
 })
 
-var loginValidation = [
+let loginValidation = [
     check('email').isEmail().withMessage('Not an email')
     .custom(async(email)=>{
         const user = await adminModel.findOne({email})
@@ -27,6 +27,9 @@ var loginValidation = [
     check('password')
     .custom(async(password,{req})=>{
         const user = await adminModel.findOne({email:req.body.email})
+        if(!user){
+            throw new Error(' ');
+        }
         const [hashedPassword,salt] = user.password.split('.')
         const key = await scrypt(password,salt,64)
         if(hashedPassword === key.toString('base64')){
@@ -43,8 +46,6 @@ var loginValidation = [
 
 router.post('/admin/login',loginValidation, async (req,res)=>{
     const errors = validationResult(req);
-    const { email,password } = req.body
-    const user = await adminModel.findOne({email})
     
     if (!errors.isEmpty()) {
         console.log(errors.mapped())
