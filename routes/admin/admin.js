@@ -22,7 +22,7 @@ router.get('/admin/product/add', async (req,res)=>{
         return res.redirect('/admin/login')
     }
     
-    res.render('./admin/addproduct',{user:req.session.user,details:[]})
+    res.render('./admin/addproduct',{add:1,errors:[]})
 })
 
 let productValidation = [
@@ -34,10 +34,11 @@ let productValidation = [
 
 router.post('/admin/product/add', productValidation, async (req,res)=>{
     const errors = validationResult(req);
+    const details = req.body
     
     if (!errors.isEmpty()) {
         console.log(errors.mapped())
-        res.render('./admin/addproduct',{details:[],errors:errors.mapped()})
+        res.render('./admin/addproduct',{add:1,details,errors:errors.mapped()})
     }
     else{
         const { title, desc, price } = req.body
@@ -54,7 +55,7 @@ router.get('/admin/product/edit/:id', async (req,res)=>{
     const id = req.params.id
     const details = await productModel.findOne({_id:id})
     console.log(details)
-    res.render('./admin/addproduct',{details})
+    res.render('./admin/addproduct',{add:0,details,errors:[]})
 })
 
 router.post('/admin/product/edit/:id', productValidation, async (req,res)=>{
@@ -65,7 +66,7 @@ router.post('/admin/product/edit/:id', productValidation, async (req,res)=>{
 
     if (!errors.isEmpty()) {
         console.log(errors.mapped())
-        res.render('./admin/addproduct',{details,errors:errors.mapped()})
+        res.render('./admin/addproduct',{add:0,details,errors:errors.mapped()})
     }
     else{
         const product = await productModel.updateOne({ _id:id }, { title, desc, price, stock })
