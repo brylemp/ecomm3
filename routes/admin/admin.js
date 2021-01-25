@@ -32,12 +32,18 @@ let productValidation = [
     check('stock').isInt({min:0,max:100}).withMessage('Stock must be a number from 0-100')
 ]
 
-router.post('/admin/product/add', productValidation, async (req,res)=>{
+function getOld(req,res,next){
+    req.oldPrice = req.body.price
+    next()
+}
+
+router.post('/admin/product/add', getOld, productValidation, async (req,res)=>{
     const errors = validationResult(req);
     const details = req.body
     
     if (!errors.isEmpty()) {
         console.log(errors.mapped())
+        details.price = req.oldPrice
         res.render('./admin/addproduct',{add:1,details,errors:errors.mapped()})
     }
     else{
@@ -54,17 +60,17 @@ router.get('/admin/product/edit/:id', async (req,res)=>{
     }
     const id = req.params.id
     const details = await productModel.findOne({_id:id})
-    console.log(details)
     res.render('./admin/addproduct',{add:0,details,errors:[]})
 })
 
-router.post('/admin/product/edit/:id', productValidation, async (req,res)=>{
+router.post('/admin/product/edit/:id', getOld, productValidation, async (req,res)=>{
     const { id } = req.params
-    const details = req.body
+    let details = req.body
     const errors = validationResult(req);
 
     if (!errors.isEmpty()) {
         console.log(errors.mapped())
+        details.price = req.oldPrice
         res.render('./admin/addproduct',{add:0,details,errors:errors.mapped()})
     }
     else{
