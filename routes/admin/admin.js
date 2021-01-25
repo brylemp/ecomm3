@@ -22,7 +22,7 @@ router.get('/admin/product/add', async (req,res)=>{
         return res.redirect('/admin/login')
     }
     
-    res.render('./admin/addproduct',{add:1,errors:[]})
+    res.render('./admin/addproduct',{add:1,details:[],errors:[]})
 })
 
 let productValidation = [
@@ -60,16 +60,20 @@ router.get('/admin/product/edit/:id', async (req,res)=>{
 
 router.post('/admin/product/edit/:id', productValidation, async (req,res)=>{
     const { id } = req.params
-    const { title, desc, price, stock } = req.body
+    const details = req.body
     const errors = validationResult(req);
-    const details = await productModel.findOne({_id:id})
 
     if (!errors.isEmpty()) {
         console.log(errors.mapped())
         res.render('./admin/addproduct',{add:0,details,errors:errors.mapped()})
     }
     else{
-        const product = await productModel.updateOne({ _id:id }, { title, desc, price, stock })
+        const product = await productModel.updateOne({ _id:id }, { 
+            title: details.title, 
+            desc: details.desc, 
+            price: details.price, 
+            stock: details.stock
+         })
         console.log(product)
         res.redirect('/admin')
     }

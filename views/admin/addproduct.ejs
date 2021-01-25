@@ -10,20 +10,20 @@
     <a href="/admin">Back <br></a>
     <form method="POST">
         <div>
-            <input type="text" type="text" name="title" id="title" placeholder="title" value="<%= (errors.length===0)?(details.title):((errors.title)?(errors.title.value):(details.title)) %>" >
+            <input type="text" type="text" name="title" id="title" placeholder="title" value="<%= (errors.title)?(errors.title.value):(details.title) %>" >
             <label><%= (errors.length===0)?(''):((errors.title)?(errors.title.msg):('')) %></label>
         </div>
         <div>
-            <input type="text" name="desc" id="desc" placeholder="description" value="<%= (errors.length===0)?(details.desc):((errors.desc)?(errors.desc.value):(details.desc)) %>">
+            <input type="text" name="desc" id="desc" placeholder="description" value="<%= (errors.desc)?(errors.desc.value):(details.desc) %>">
             <label><%= (errors.length===0)?(''):((errors.desc)?(errors.desc.msg):('')) %></label>
         </div>
         <div>
-            <input type="text" name="price" id="price" placeholder="price" value="<%= (errors.length===0)?(details.price):((errors.price)?(errors.price.value):(details.price)) %>">
+            <input type="text" name="price" id="price" placeholder="price" value="<%= details.price %>">
             <label><%= (errors.length===0)?(''):((errors.price)?(errors.price.msg):('')) %></label>
         </div>
         
         <div style="<%= (add)?('display: none;'):('') %>">
-            <input type="number" name="stock" id="stock" placeholder="stock" value="<%= (errors.length===0)?(details.stock):((errors.stock)?(errors.stock.value):(details.stock)) %>">
+            <input type="number" name="stock" id="stock" placeholder="stock" value="<%= (errors.stock)?(errors.stock.value):(details.stock) %>">
             <label><%= (errors.length===0)?(''):((errors.stock)?(errors.stock.msg):('')) %></label>
         </div>
         <div>
