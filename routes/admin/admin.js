@@ -1,10 +1,12 @@
 const express = require('express')
 const crypto = require('crypto')
 const util = require('util')
-const { check, validationResult } = require('express-validator');
+const { validationResult } = require('express-validator');
 
 const adminModel = require('../../models/admin')
 const productModel = require('../../models/product')
+const { productValidation } = require('../validators')
+const { getOld } = require('../middleware')
 
 const scrypt = util.promisify(crypto.scrypt)
 const router = express.Router()
@@ -24,18 +26,6 @@ router.get('/admin/product/add', async (req,res)=>{
     
     res.render('./admin/addproduct',{add:1,details:[],errors:[]})
 })
-
-let productValidation = [
-    check('title').isLength({min:5, max:20}).withMessage('Title must be 5-20 characters long'),
-    check('desc').isLength({min:5, max:200}).withMessage('Description must be 5-200 characters long'),
-    check('price').toFloat().isFloat().withMessage('Price must be a number'),
-    check('stock').isInt({min:0,max:100}).withMessage('Stock must be a number from 0-100')
-]
-
-function getOld(req,res,next){
-    req.oldPrice = req.body.price
-    next()
-}
 
 router.post('/admin/product/add', getOld, productValidation, async (req,res)=>{
     const errors = validationResult(req);
