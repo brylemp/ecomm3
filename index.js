@@ -6,6 +6,7 @@ require('dotenv').config()
 
 const authRouter = require('./routes/admin/auth')
 const adminRouter = require('./routes/admin/admin')
+const storeRouter = require('./routes/store/index')
 
 mongoose.connect(process.env.mongoDBURI,{ useNewUrlParser: true,useUnifiedTopology: true }, ()=> console.log('Connected to mongoDB'))
 const app = express()
@@ -24,9 +25,10 @@ app.use(express.urlencoded({extended:true}))
 app.use(express.json())
 app.use(authRouter)
 app.use(adminRouter)
+app.use(storeRouter)
 
-app.get('/',(req,res)=>{
-    res.send('wew')
-})
+app.get('*', function(req, res){
+    res.status(404).render('./error',{msg:'404 not found'});
+});
 
 app.listen(3000,()=> console.log('Connected to port 3000'))

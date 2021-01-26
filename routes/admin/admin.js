@@ -23,11 +23,9 @@ router.get('/admin/product/add', isNotAuthenticated, async (req,res)=>{
 router.post('/admin/product/add', getOld, productValidation, async (req,res)=>{
     const errors = validationResult(req);
     const details = req.body
-    console.log(details)
     
     if (!errors.isEmpty()) {
         console.log(errors.mapped())
-        console.log("wew")
         details.price = req.oldPrice
         res.render('./admin/addproduct',{add:1,details,errors:errors.mapped()})
     }
@@ -36,8 +34,8 @@ router.post('/admin/product/add', getOld, productValidation, async (req,res)=>{
             title: details.title, 
             desc: details.desc, 
             price: details.price, 
+            img: details.img
          })
-        // console.log(product)
         res.redirect('/admin')
     }
 })
@@ -55,7 +53,6 @@ router.post('/admin/product/edit/:id', getOld, productValidation, stockValidatio
     const product = await productModel.findById(id) 
 
     if (!errors.isEmpty()) {
-        console.log(errors.mapped())
         details.price = req.oldPrice
         details._id = product._id.toString()
         res.render('./admin/addproduct',{add:0,details,errors:errors.mapped()})
@@ -65,6 +62,7 @@ router.post('/admin/product/edit/:id', getOld, productValidation, stockValidatio
         product.desc = details.desc 
         product.price = details.price
         product.stock = details.stock
+        product.img = details.img
         product.save()
         res.redirect('/admin')
     }
@@ -73,7 +71,6 @@ router.post('/admin/product/edit/:id', getOld, productValidation, stockValidatio
 router.post('/admin/product/delete/:id', async (req,res)=>{
     const { id } = req.params
     const product = await productModel.deleteOne({_id:id})
-    console.log(product)
     res.redirect('/admin')
 })
 

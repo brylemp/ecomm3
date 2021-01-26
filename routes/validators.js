@@ -34,8 +34,8 @@ exports.loginValidation = [
 ]
 
 exports.productValidation = [
-    check('title').isLength({min:5, max:20}).withMessage('Title must be 5-20 characters long'),
-    check('desc').isLength({min:5, max:200}).withMessage('Description must be 5-200 characters long'),
+    check('title').isLength({min:5, max:100}).withMessage('Title must be 5-20 characters long'),
+    check('desc').isLength({min:5, max:500}).withMessage('Description must be 5-200 characters long'),
     check('price').toFloat().isFloat().withMessage('Price must be a number'),
 ]
 
