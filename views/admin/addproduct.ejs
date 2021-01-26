@@ -6,6 +6,16 @@
     <title>Document</title>
     <link rel="stylesheet" href="/css/admin/addproduct.css">
 </head>
+<style>
+    .desc{
+        /* border: solid 1px black; */
+        width: 700px;
+        height: 200px;
+    }
+    .ck-editor__editable {
+        min-height: 150px !important;
+    }
+</style>
 <body>
     <a href="/admin">Back <br></a>
     <form method="POST">
@@ -13,8 +23,8 @@
             <input type="text" type="text" name="title" id="title" placeholder="title" value="<%= (errors.title)?(errors.title.value):(details.title) %>" >
             <label><%= (errors.length===0)?(''):((errors.title)?(errors.title.msg):('')) %></label>
         </div>
-        <div>
-            <input type="text" name="desc" id="desc" placeholder="description" value="<%= (errors.desc)?(errors.desc.value):(details.desc) %>">
+        <div class="desc">
+            <textarea type="text" name="desc" id="editor" rows="10"><%= (errors.desc)?(errors.desc.value):(details.desc) %></textarea>
             <label><%= (errors.length===0)?(''):((errors.desc)?(errors.desc.msg):('')) %></label>
         </div>
         <div>
@@ -22,21 +32,29 @@
             <label><%= (errors.length===0)?(''):((errors.price)?(errors.price.msg):('')) %></label>
         </div>
         
-        <div style="<%= (add)?('display: none;'):('') %>">
-            <input type="number" name="stock" id="stock" placeholder="stock" value="<%= (errors.stock)?(errors.stock.value):(details.stock) %>">
-            <label><%= (errors.length===0)?(''):((errors.stock)?(errors.stock.msg):('')) %></label>
-        </div>
+        <% if(!add){ %> 
+            <div>
+                <input type="number" name="stock" id="stock" placeholder="stock" value="<%= (errors.stock)?(errors.stock.value):(details.stock) %>">
+                <label><%= (errors.length===0)?(''):((errors.stock)?(errors.stock.msg):('')) %></label>
+            </div>
+        <% } %> 
         <div>
             <input type="submit">
         </div>
-        <% if(!add){ %>
-            <%- `
-                <form method="POST" action="/admin/product/delete/${details._id}">
-                    <input type="submit" value="Delete">
-                </form>
-            ` %> 
-        <% } %>  
     </form>
-    
+    <% if(!add){ %>
+        <form method="POST" action="/admin/product/delete/<%= details._id %>">
+            <input type="submit" value="Delete">
+        </form>
+    <% } %>  
+    <script src="https://cdn.ckeditor.com/ckeditor5/24.0.0/classic/ckeditor.js"></script>
+    <script>
+        ClassicEditor
+            .create( document.querySelector( '#editor' ) )
+            .catch( error => {
+                console.error( error );
+            } );
+        editor.ui.view.editable.editableElement.style.height = '100px';    
+    </script>
 </body>
 </html>

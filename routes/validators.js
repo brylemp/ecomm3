@@ -1,4 +1,9 @@
 const { check } = require('express-validator');
+const adminModel = require('../models/admin')
+const crypto = require('crypto')
+const util = require('util')
+
+const scrypt = util.promisify(crypto.scrypt)
 
 exports.loginValidation = [
     check('email').isEmail().withMessage('Not an email')
@@ -32,6 +37,8 @@ exports.productValidation = [
     check('title').isLength({min:5, max:20}).withMessage('Title must be 5-20 characters long'),
     check('desc').isLength({min:5, max:200}).withMessage('Description must be 5-200 characters long'),
     check('price').toFloat().isFloat().withMessage('Price must be a number'),
-    check('stock').isInt({min:0,max:100}).withMessage('Stock must be a number from 0-100')
 ]
 
+exports.stockValidation = [
+    check('stock').isInt({min:0,max:100}).withMessage('Stock must be a number from 0-100')
+]

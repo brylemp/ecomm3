@@ -5,7 +5,7 @@ const { validationResult } = require('express-validator');
 
 const adminModel = require('../../models/admin')
 const productModel = require('../../models/product')
-const { productValidation } = require('../validators')
+const { productValidation,stockValidation } = require('../validators')
 const { getOld, isNotAuthenticated } = require('../middleware')
 
 const scrypt = util.promisify(crypto.scrypt)
@@ -23,16 +23,21 @@ router.get('/admin/product/add', isNotAuthenticated, async (req,res)=>{
 router.post('/admin/product/add', getOld, productValidation, async (req,res)=>{
     const errors = validationResult(req);
     const details = req.body
+    console.log(details)
     
     if (!errors.isEmpty()) {
         console.log(errors.mapped())
+        console.log("wew")
         details.price = req.oldPrice
         res.render('./admin/addproduct',{add:1,details,errors:errors.mapped()})
     }
     else{
-        const { title, desc, price } = req.body
-        const product = await productModel.create({ title, desc, price })
-        console.log(product)
+        const product = await productModel.create({ 
+            title: details.title, 
+            desc: details.desc, 
+            price: details.price, 
+         })
+        // console.log(product)
         res.redirect('/admin')
     }
 })
@@ -43,24 +48,24 @@ router.get('/admin/product/edit/:id', isNotAuthenticated, async (req,res)=>{
     res.render('./admin/addproduct',{add:0,details,errors:[]})
 })
 
-router.post('/admin/product/edit/:id', getOld, productValidation, async (req,res)=>{
+router.post('/admin/product/edit/:id', getOld, productValidation, stockValidation, async (req,res)=>{
     const { id } = req.params
     let details = req.body
     const errors = validationResult(req);
+    const product = await productModel.findById(id) 
 
     if (!errors.isEmpty()) {
         console.log(errors.mapped())
         details.price = req.oldPrice
+        details._id = product._id.toString()
         res.render('./admin/addproduct',{add:0,details,errors:errors.mapped()})
     }
     else{
-        const product = await productModel.updateOne({ _id:id }, { 
-            title: details.title, 
-            desc: details.desc, 
-            price: details.price, 
-            stock: details.stock
-         })
-        console.log(product)
+        product.title = details.title 
+        product.desc = details.desc 
+        product.price = details.price
+        product.stock = details.stock
+        product.save()
         res.redirect('/admin')
     }
 })
