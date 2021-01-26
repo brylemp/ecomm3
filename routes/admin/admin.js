@@ -6,24 +6,17 @@ const { validationResult } = require('express-validator');
 const adminModel = require('../../models/admin')
 const productModel = require('../../models/product')
 const { productValidation } = require('../validators')
-const { getOld } = require('../middleware')
+const { getOld, isNotAuthenticated } = require('../middleware')
 
 const scrypt = util.promisify(crypto.scrypt)
 const router = express.Router()
 
-router.get('/admin', async (req,res)=>{
-    if(!req.session.user){
-        return res.redirect('/admin/login')
-    }
+router.get('/admin', isNotAuthenticated, async (req,res)=>{
     const products = await productModel.find()
     res.render('./admin/index',{user:req.session.user,products})
 })
 
-router.get('/admin/product/add', async (req,res)=>{
-    if(!req.session.user){
-        return res.redirect('/admin/login')
-    }
-    
+router.get('/admin/product/add', isNotAuthenticated, async (req,res)=>{
     res.render('./admin/addproduct',{add:1,details:[],errors:[]})
 })
 
@@ -44,10 +37,7 @@ router.post('/admin/product/add', getOld, productValidation, async (req,res)=>{
     }
 })
 
-router.get('/admin/product/edit/:id', async (req,res)=>{
-    if(!req.session.user){
-        return res.redirect('/admin/login')
-    }
+router.get('/admin/product/edit/:id', isNotAuthenticated, async (req,res)=>{
     const id = req.params.id
     const details = await productModel.findOne({_id:id})
     res.render('./admin/addproduct',{add:0,details,errors:[]})

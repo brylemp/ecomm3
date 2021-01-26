@@ -6,14 +6,12 @@ const { validationResult } = require('express-validator');
 const adminModel = require('../../models/admin')
 const productModel = require('../../models/product')
 const { loginValidation } = require('../validators')
+const { isAuthenticated } = require('../middleware')
 
 const scrypt = util.promisify(crypto.scrypt)
 const router = express.Router()
 
-router.get('/admin/login', async (req,res)=>{
-    if(req.session.user){
-        return res.redirect('/admin')
-    }
+router.get('/admin/login', isAuthenticated, async (req,res)=>{
     res.render('./admin/login')
 })
 
