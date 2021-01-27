@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    <a href="admin/product/feature/add" >" >Back <br></a>
+    <form method="POST">
+        <div>
+            <select name="productId" id="productId">
+                <% for(let product of products){ %> 
+                    <option value="<%= product._id %>"><%= product.title %> </option>
+                <% } %> 
+            </select>
+        </div>
+        <div>
+            <input type="text" type="text" name="bannerImg" id="bannerImg" placeholder="bannerImg">
+        </div>
+        <input type="submit" value="Submit">
+    </form>
+    
+</body>
+</html>

@@ -5,6 +5,7 @@ const { validationResult } = require('express-validator');
 
 const adminModel = require('../../models/admin')
 const productModel = require('../../models/product')
+const featuredProductModel = require('../../models/featuredProduct')
 const { productValidation,stockValidation } = require('../validators')
 const { getOld, isNotAuthenticated } = require('../middleware')
 
@@ -72,6 +73,26 @@ router.post('/admin/product/delete/:id', async (req,res)=>{
     const { id } = req.params
     const product = await productModel.deleteOne({_id:id})
     res.redirect('/admin')
+})
+
+router.get('/admin/product/feature/add', isNotAuthenticated, async (req,res)=>{
+    const products = await productModel.find()
+    const fproducts = await featuredProductModel.find()
+    res.render('./admin/addfproduct',{products,fproducts})
+})
+
+router.post('/admin/product/feature/add', async (req,res)=>{
+    const { productId,bannerImg } = req.body
+    const product = await featuredProductModel.create({productId,bannerImg})
+    res.redirect('/admin')
+})
+
+router.get('/admin/product/feature/delete/:id', isNotAuthenticated, async (req,res)=>{
+    const { id } = req.params
+    console.log(id)
+    const fproduct = await featuredProductModel.deleteOne({_id:id})
+    console.log(fproduct)
+    res.redirect('/admin/product/feature/add')
 })
 
 router.post('/admin/createaccount',async (req,res)=>{

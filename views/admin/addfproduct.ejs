@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    <a href="/admin">Back <br></a>
+    <div class="container">
+        <% for(let fproduct of fproducts){ %> 
+            <% for(let product of products){ %> 
+                <% if(product._id.toString() === fproduct.productId){ %> 
+                    <%= product.title %>
+                    <%= fproduct.productId %> 
+                    <%= fproduct.bannerImg %> 
+                    <a href="/admin/product/feature/delete/<%= fproduct._id %>">Delete</a>
+                    <br>
+                <% } %> 
+            <% } %> 
+        <% } %> 
+    </div>
+    <% if(fproducts.length > -1){ %>
+        <form method="POST">
+            <div>
+                <select name="productId" id="productId">
+                    <% for(let product of products){ %> 
+                        <option value="<%= product._id %>"><%= product.title %> </option>
+                    <% } %> 
+                </select>
+            </div>
+            <div>
+                <input type="text" type="text" name="bannerImg" id="bannerImg" placeholder="bannerImg">
+            </div>
+            <input type="submit" value="Submit">
+        </form>
+    <% } %>  
+</body>
+</html>

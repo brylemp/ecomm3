@@ -1,13 +1,13 @@
 const express = require('express')
 
 const productModel = require('../../models/product')
+const featuredProductModel = require('../../models/featuredProduct')
 const router = express.Router()
 
 router.get('/', async (req,res)=>{
     const products = await productModel.find()
-
-    console.log(products)
-    res.render('./store/index',{products})
+    const fproducts = await featuredProductModel.find()
+    res.render('./store/index',{products,fproducts})
 })
 
 router.get('/product/:id', async (req,res)=>{

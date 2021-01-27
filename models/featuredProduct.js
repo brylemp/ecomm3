@@ -5,4 +5,4 @@ const featuredProductSchema = new mongoose.Schema({
     bannerImg: String,
 })
 
-module.exports = mongoose.model('product',featuredProductSchema)
+module.exports = mongoose.model('featuredProduct',featuredProductSchema)
