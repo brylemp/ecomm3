@@ -27,8 +27,12 @@ app.use(authRouter)
 app.use(adminRouter)
 app.use(storeRouter)
 
-app.get('*', function(req, res){
+app.get('/error', (req,res)=> {
     res.status(404).render('./error',{msg:'404 not found'});
+})
+
+app.get('*', function(req, res){
+    res.redirect('/error')
 });
 
 app.listen(3000,()=> console.log('Connected to port 3000'))
