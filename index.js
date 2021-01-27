@@ -8,7 +8,7 @@ const authRouter = require('./routes/admin/auth')
 const adminRouter = require('./routes/admin/admin')
 const storeRouter = require('./routes/store/index')
 
-mongoose.connect(process.env.mongoDBURI,{ useNewUrlParser: true,useUnifiedTopology: true }, ()=> console.log('Connected to mongoDB'))
+mongoose.connect(process.env.mongoDBURI,{ useNewUrlParser: true, useUnifiedTopology: true, useFindAndModify:false }, ()=> console.log('Connected to mongoDB'))
 const app = express()
 app.set('view engine','ejs')
 

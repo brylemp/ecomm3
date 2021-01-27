@@ -3,6 +3,10 @@ const crypto = require('crypto')
 const util = require('util')
 const { validationResult } = require('express-validator');
 
+// var multer  = require('multer')
+// var upload = multer({ dest: 'uploads/' })
+// var imgur = require('imgur');
+
 const adminModel = require('../../models/admin')
 const productModel = require('../../models/product')
 const featuredProductModel = require('../../models/featuredProduct')
@@ -95,14 +99,25 @@ router.get('/admin/product/feature/delete/:id', isNotAuthenticated, async (req,r
     res.redirect('/admin/product/feature/add')
 })
 
-router.post('/admin/createaccount',async (req,res)=>{
-    // const salt = crypto.randomBytes(64)
-    // const key = await scrypt('123', salt.toString('base64'), 64)
-    // const hashedPassword = `${key.toString('base64')}.${salt.toString('base64')}`
-    // console.log(hashedPassword)
-    // const user = await adminModel.create({firstName:'admin', lastName:'admin', email:'admin@admin.com',password:hashedPassword})
+// router.get('/imgur', async (req,res)=>{
+    
+//     res.render('./imgur')
+// })
 
-    // console.log(user)
-})
+// router.post('/imgur', upload.single('file'), async (req,res)=>{
+//     console.log(req.file)
+
+//     res.redirect('/imgur')
+// })
+
+// router.post('/admin/createaccount',async (req,res)=>{
+//     const salt = crypto.randomBytes(64)
+//     const key = await scrypt('123', salt.toString('base64'), 64)
+//     const hashedPassword = `${key.toString('base64')}.${salt.toString('base64')}`
+//     console.log(hashedPassword)
+//     const user = await adminModel.create({firstName:'admin', lastName:'admin', email:'admin@admin.com',password:hashedPassword})
+
+//     console.log(user)
+// })
 
 module.exports = router
