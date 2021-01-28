@@ -14,6 +14,7 @@ const productModel = require('../../models/product')
 const featuredProductModel = require('../../models/featuredProduct')
 const { productValidation,stockValidation } = require('../validators')
 const { getOld, isNotAuthenticated } = require('../middleware')
+const { imgurUpload } = require('../helpers')
 
 const scrypt = util.promisify(crypto.scrypt)
 const router = express.Router()
@@ -35,30 +36,7 @@ router.get('/admin/product/add', isNotAuthenticated, async (req,res)=>{
     res.render('./admin/addproduct',{add:1,details:[],errors:[]})
 })
 
-async function imgurUpload(req,cb){
-    const imagePath = path.join(__dirname, '..', '..', 'uploads', req.file.filename);
-    const image = fs.readFileSync(imagePath, 'base64');
-    try{
-        const response = await axios({
-            method: 'post',
-            url: 'https://api.imgur.com/3/upload',
-            headers: {
-                'Authorization' :  `Bearer ${process.env.imgurAccess_token}`,
-                // 'Authorization' :  `Client-ID ${process.env.imgurClient_id}`,
-            },
-            data: {
-                image,
-                type: 'base64'
-            }
-            });
-        cb(response)
-        console.log(response.data)
-    }catch(e){
-        console.log(e.response.data)
-    }
-}
-
-router.post('/admin/product/add', upload.single('file') ,getOld, productValidation, async (req,res)=>{
+router.post('/admin/product/add', upload.single('file'), getOld, productValidation, async (req,res)=>{
     const errors = validationResult(req);
     const details = req.body
     
@@ -70,6 +48,7 @@ router.post('/admin/product/add', upload.single('file') ,getOld, productValidati
     else{
         if(req.file){
             await imgurUpload(req,async (response)=>{
+                console.log(response.data)
                 const product = await productModel.create({ 
                     title: details.title, 
                     desc: details.desc, 
@@ -108,23 +87,18 @@ router.post('/admin/product/edit/:id', upload.single('file'), getOld, productVal
         res.render('./admin/addproduct',{add:0,details,errors:errors.mapped()})
     }
     else{
+        product.title = details.title 
+        product.desc = details.desc 
+        product.price = details.price
+        product.stock = details.stock
         if(req.file){
-            const imagePath = path.join(__dirname, '..', '..', 'uploads', req.file.filename);
-            const image = fs.readFileSync(imagePath, 'base64');
             imgurUpload(req,async (response)=>{
-                product.title = details.title 
-                product.desc = details.desc 
-                product.price = details.price
-                product.stock = details.stock
+                console.log(response.data)
                 product.img = response.data.data.link
                 product.save()
             })
         }
         else{
-            product.title = details.title 
-            product.desc = details.desc 
-            product.price = details.price
-            product.stock = details.stock
             product.img = details.img
             product.save()
         }
@@ -144,17 +118,25 @@ router.get('/admin/product/feature/add', isNotAuthenticated, async (req,res)=>{
     res.render('./admin/addfproduct',{products,fproducts})
 })
 
-router.post('/admin/product/feature/add', async (req,res)=>{
+router.post('/admin/product/feature/add', upload.single('file'), async (req,res)=>{
     const { productId,bannerImg } = req.body
-    const product = await featuredProductModel.create({productId,bannerImg})
+    console.log(req.file)
+    if(req.file){
+        imgurUpload(req, async (response) =>{
+            console.log(response.data)
+            const product = await featuredProductModel.create({productId,bannerImg:response.data.data.link})
+        })
+    }
+    else{
+        const product = await featuredProductModel.create({productId,bannerImg})
+    }
+    
     res.redirect('/admin')
 })
 
 router.get('/admin/product/feature/delete/:id', isNotAuthenticated, async (req,res)=>{
     const { id } = req.params
-    console.log(id)
     const fproduct = await featuredProductModel.deleteOne({_id:id})
-    console.log(fproduct)
     res.redirect('/admin/product/feature/add')
 })
 
