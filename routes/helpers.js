@@ -18,9 +18,9 @@ async function imgurUpload(req,cb){
                 type: 'base64'
             }
             });
-        cb(response)
-    }catch(e){
-        console.log(e)
+        cb(response,null)
+    }catch(error){ 
+        cb(null,error.response.data)
     }
 }
 

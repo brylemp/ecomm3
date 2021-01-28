@@ -122,9 +122,14 @@ router.post('/admin/product/feature/add', upload.single('file'), async (req,res)
     const { productId,bannerImg } = req.body
     console.log(req.file)
     if(req.file){
-        imgurUpload(req, async (response) =>{
-            console.log(response.data)
-            const product = await featuredProductModel.create({productId,bannerImg:response.data.data.link})
+        imgurUpload(req, async (response,error) =>{
+            if(error){
+                console.log(error)
+            }
+            else{
+                console.log(response.data)
+                const product = await featuredProductModel.create({productId,bannerImg:response.data.data.link})
+            } 
         })
     }
     else{
