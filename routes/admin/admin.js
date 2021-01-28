@@ -35,6 +35,29 @@ router.get('/admin/product/add', isNotAuthenticated, async (req,res)=>{
     res.render('./admin/addproduct',{add:1,details:[],errors:[]})
 })
 
+async function imgurUpload(req,cb){
+    const imagePath = path.join(__dirname, '..', '..', 'uploads', req.file.filename);
+    const image = fs.readFileSync(imagePath, 'base64');
+    try{
+        const response = await axios({
+            method: 'post',
+            url: 'https://api.imgur.com/3/upload',
+            headers: {
+                'Authorization' :  `Bearer ${process.env.imgurAccess_token}`,
+                // 'Authorization' :  `Client-ID ${process.env.imgurClient_id}`,
+            },
+            data: {
+                image,
+                type: 'base64'
+            }
+            });
+        cb(response)
+        console.log(response.data)
+    }catch(e){
+        console.log(e.response.data)
+    }
+}
+
 router.post('/admin/product/add', upload.single('file') ,getOld, productValidation, async (req,res)=>{
     const errors = validationResult(req);
     const details = req.body
@@ -46,31 +69,14 @@ router.post('/admin/product/add', upload.single('file') ,getOld, productValidati
     }
     else{
         if(req.file){
-            const imagePath = path.join(__dirname, '..', '..', 'uploads', req.file.filename);
-            const image = fs.readFileSync(imagePath, 'base64');
-            try{
-                const response = await axios({
-                    method: 'post',
-                    url: 'https://api.imgur.com/3/upload',
-                    headers: {
-                        'Authorization' :  `Bearer ${process.env.imgurAccess_token}`,
-                        // 'Authorization' :  `Client-ID ${process.env.imgurClient_id}`,
-                    },
-                    data: {
-                        image,
-                        type: 'base64'
-                    }
-                  });
+            await imgurUpload(req,async (response)=>{
                 const product = await productModel.create({ 
                     title: details.title, 
                     desc: details.desc, 
                     price: details.price, 
                     img: response.data.data.link
                 })
-                console.log(response.data)
-            }catch(e){
-                console.log(e.response.data)
-            }
+            })
         }
         else{
             const product = await productModel.create({ 
@@ -105,29 +111,14 @@ router.post('/admin/product/edit/:id', upload.single('file'), getOld, productVal
         if(req.file){
             const imagePath = path.join(__dirname, '..', '..', 'uploads', req.file.filename);
             const image = fs.readFileSync(imagePath, 'base64');
-            try{
-                const response = await axios({
-                    method: 'post',
-                    url: 'https://api.imgur.com/3/upload',
-                    headers: {
-                        'Authorization' :  `Bearer ${process.env.imgurAccess_token}`,
-                        // 'Authorization' :  `Client-ID ${process.env.imgurClient_id}`,
-                    },
-                    data: {
-                        image,
-                        type: 'base64'
-                    }
-                });
+            imgurUpload(req,async (response)=>{
                 product.title = details.title 
                 product.desc = details.desc 
                 product.price = details.price
                 product.stock = details.stock
                 product.img = response.data.data.link
                 product.save()
-                console.log(response.data)
-            }catch(e){
-                console.log(e.response.data)
-            }
+            })
         }
         else{
             product.title = details.title 
