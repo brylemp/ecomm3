@@ -16,7 +16,6 @@ router.get('/product/:id', async (req,res)=>{
     const { id } = req.params
     try{
         const product = await productModel.findOne({_id:id})
-        console.log(product)
         res.render('./store/product',{product})
     }catch(error){
         console.log(error)

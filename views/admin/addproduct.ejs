@@ -13,7 +13,7 @@
 </style>
 <body>
     <a href="/admin">Back <br></a>
-    <form method="POST">
+    <form method="POST" enctype="multipart/form-data">
         <div>
             <input type="text" type="text" name="title" id="title" placeholder="title" value="<%= (errors.title)?(errors.title.value):(details.title) %>" >
             <label><%= (errors.length===0)?(''):((errors.title)?(errors.title.msg):('')) %></label>
@@ -25,6 +25,9 @@
         <div>
             <input type="text" name="price" id="price" placeholder="price" value="<%= details.price %>">
             <label><%= (errors.length===0)?(''):((errors.price)?(errors.price.msg):('')) %></label>
+        </div>
+        <div>
+            <input type="file" name="file">
         </div>
         <div>
             <input type="text" name="img" id="img" placeholder="img" value="<%= details.img %>">

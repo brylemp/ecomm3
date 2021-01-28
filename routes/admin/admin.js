@@ -1,12 +1,14 @@
+const fs = require('fs');
+const path = require('path');
 const express = require('express')
 const crypto = require('crypto')
 const util = require('util')
+
+const axios = require('axios')
+const multer  = require('multer')
+const upload = multer({ dest: 'uploads/' })
+
 const { validationResult } = require('express-validator');
-
-// var multer  = require('multer')
-// var upload = multer({ dest: 'uploads/' })
-// var imgur = require('imgur');
-
 const adminModel = require('../../models/admin')
 const productModel = require('../../models/product')
 const featuredProductModel = require('../../models/featuredProduct')
@@ -21,11 +23,19 @@ router.get('/admin', isNotAuthenticated, async (req,res)=>{
     res.render('./admin/index',{user:req.session.user,products})
 })
 
+router.get('/admin/clearpictures', isNotAuthenticated, async (req,res)=>{
+    const imagePath = path.join(__dirname, '..', '..', 'uploads');
+    // const image = fs.readdirSync(imagePath);
+    // console.log(image)
+    fs.rmdirSync(imagePath, { recursive: true });
+    res.redirect('/admin')
+})
+
 router.get('/admin/product/add', isNotAuthenticated, async (req,res)=>{
     res.render('./admin/addproduct',{add:1,details:[],errors:[]})
 })
 
-router.post('/admin/product/add', getOld, productValidation, async (req,res)=>{
+router.post('/admin/product/add', upload.single('file') ,getOld, productValidation, async (req,res)=>{
     const errors = validationResult(req);
     const details = req.body
     
@@ -35,12 +45,41 @@ router.post('/admin/product/add', getOld, productValidation, async (req,res)=>{
         res.render('./admin/addproduct',{add:1,details,errors:errors.mapped()})
     }
     else{
-        const product = await productModel.create({ 
-            title: details.title, 
-            desc: details.desc, 
-            price: details.price, 
-            img: details.img
-         })
+        if(req.file){
+            const imagePath = path.join(__dirname, '..', '..', 'uploads', req.file.filename);
+            const image = fs.readFileSync(imagePath, 'base64');
+            try{
+                const response = await axios({
+                    method: 'post',
+                    url: 'https://api.imgur.com/3/upload',
+                    headers: {
+                        'Authorization' :  `Bearer ${process.env.imgurAccess_token}`,
+                        // 'Authorization' :  `Client-ID ${process.env.imgurClient_id}`,
+                    },
+                    data: {
+                        image,
+                        type: 'base64'
+                    }
+                  });
+                const product = await productModel.create({ 
+                    title: details.title, 
+                    desc: details.desc, 
+                    price: details.price, 
+                    img: response.data.data.link
+                })
+                console.log(response.data)
+            }catch(e){
+                console.log(e.response.data)
+            }
+        }
+        else{
+            const product = await productModel.create({ 
+                title: details.title, 
+                desc: details.desc, 
+                price: details.price, 
+                img: details.img
+            })
+        }
         res.redirect('/admin')
     }
 })
@@ -51,7 +90,7 @@ router.get('/admin/product/edit/:id', isNotAuthenticated, async (req,res)=>{
     res.render('./admin/addproduct',{add:0,details,errors:[]})
 })
 
-router.post('/admin/product/edit/:id', getOld, productValidation, stockValidation, async (req,res)=>{
+router.post('/admin/product/edit/:id', upload.single('file'), getOld, productValidation, stockValidation, async (req,res)=>{
     const { id } = req.params
     let details = req.body
     const errors = validationResult(req);
@@ -63,12 +102,41 @@ router.post('/admin/product/edit/:id', getOld, productValidation, stockValidatio
         res.render('./admin/addproduct',{add:0,details,errors:errors.mapped()})
     }
     else{
-        product.title = details.title 
-        product.desc = details.desc 
-        product.price = details.price
-        product.stock = details.stock
-        product.img = details.img
-        product.save()
+        if(req.file){
+            const imagePath = path.join(__dirname, '..', '..', 'uploads', req.file.filename);
+            const image = fs.readFileSync(imagePath, 'base64');
+            try{
+                const response = await axios({
+                    method: 'post',
+                    url: 'https://api.imgur.com/3/upload',
+                    headers: {
+                        'Authorization' :  `Bearer ${process.env.imgurAccess_token}`,
+                        // 'Authorization' :  `Client-ID ${process.env.imgurClient_id}`,
+                    },
+                    data: {
+                        image,
+                        type: 'base64'
+                    }
+                });
+                product.title = details.title 
+                product.desc = details.desc 
+                product.price = details.price
+                product.stock = details.stock
+                product.img = response.data.data.link
+                product.save()
+                console.log(response.data)
+            }catch(e){
+                console.log(e.response.data)
+            }
+        }
+        else{
+            product.title = details.title 
+            product.desc = details.desc 
+            product.price = details.price
+            product.stock = details.stock
+            product.img = details.img
+            product.save()
+        }
         res.redirect('/admin')
     }
 })
@@ -99,16 +167,7 @@ router.get('/admin/product/feature/delete/:id', isNotAuthenticated, async (req,r
     res.redirect('/admin/product/feature/add')
 })
 
-// router.get('/imgur', async (req,res)=>{
-    
-//     res.render('./imgur')
-// })
 
-// router.post('/imgur', upload.single('file'), async (req,res)=>{
-//     console.log(req.file)
-
-//     res.redirect('/imgur')
-// })
 
 // router.post('/admin/createaccount',async (req,res)=>{
 //     const salt = crypto.randomBytes(64)
