@@ -13,24 +13,24 @@
 <body>
     <%- include('./navbar'); %>
     <div class="container">
-        <div class="row mt-2 pt-5 ms-5 me-5 row-bg shadow-sm">
-            <div class="col-sm-5 ps-5">
-                <img class="product-img" src="<%= product.img %>">
+        <div class="row mt-2 pt-5 ms-5 me-5 row-bg shadow-sm d-flex justify-content-center">
+            <div class="col-sm-5 d-flex justify-content-center">
+                <img src="<%= product.img %>" class="me-5 mt-2 mb-2 img-fluid" width="70%" alt="...">
             </div>
-            <div class="col-sm-7">
-                <h1><%= product.title %> </h1>
-                <div class="product-price">
-                    <h2>₱<%= product.price %> </h2>
+            <div class="col-sm-4 d-flex justify-content-start">
+                <div>
+                    <h1><%= product.title %> </h1>
+                    <h2>₱<%= product.price.toLocaleString() %> </h2>
                     <% if(product.stock === 0){ %>
                         <b>OUT OF STOCK</b> 
                     <% }else{ %> 
                         <b>AVAILABLE</b>
                     <% } %> 
-                    <form method="POST" action="/cart/add/<%=product._id.toString()%>"> 
+                    
+                    <form method="POST" class="mt-5 d-flex align-items-end" action="/cart/add/<%=product._id.toString()%>"> 
                         <input type="submit" value="Add to Cart" class="btn btn-primary">
                     </form>
                 </div>
-                
             </div>
         </div>
         <div class="row mt-2 pt-2 ms-5 me-5 row-bg shadow-sm">

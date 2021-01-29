@@ -7,7 +7,7 @@ require('dotenv').config()
 const authRouter = require('./routes/admin/auth')
 const adminRouter = require('./routes/admin/admin')
 const storeRouter = require('./routes/store/index')
-const imgurRouter = require('./routes/admin/imgur')
+const cartRouter = require('./routes/store/cart')
 
 mongoose.connect(process.env.mongoDBURI,{ useNewUrlParser: true, useUnifiedTopology: true, useFindAndModify:false }, ()=> console.log('Connected to mongoDB'))
 const app = express()
@@ -27,7 +27,7 @@ app.use(express.json())
 app.use(authRouter)
 app.use(adminRouter)
 app.use(storeRouter)
-app.use(imgurRouter)
+app.use(cartRouter)
 
 app.get('/error', (req,res)=> {
     res.status(404).render('./error',{msg:'404 not found'});

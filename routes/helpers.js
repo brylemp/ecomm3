@@ -2,7 +2,7 @@ const fs = require('fs');
 const path = require('path');
 const axios = require('axios')
 
-async function imgurUpload(req,cb){
+exports.imgurUpload = async function imgurUpload(req,cb){
     const imagePath = path.join(__dirname, '..', 'uploads', req.file.filename);
     const image = fs.readFileSync(imagePath, 'base64');
     try{
@@ -24,4 +24,20 @@ async function imgurUpload(req,cb){
     }
 }
 
-exports.imgurUpload = imgurUpload
+exports.keyToIndex = function keyToIndex(key,array){
+    let arrayNew = {}
+    for(let x of array){
+        let tempList = {}
+        for(let y in x){
+            if(y === key){
+                continue
+            }
+            else{
+                tempList[y] = x[y]
+            }
+        }
+        const keyIndex = Object.keys(x).indexOf(key)
+        arrayNew[Object.values(x)[keyIndex]] = tempList
+    }
+    return arrayNew
+}

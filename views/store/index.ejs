@@ -56,7 +56,7 @@
                     <img src="<%= product.img %>" class="card-img-top" alt="...">
                     <div class="card-body">
                         <a href="/product/<%= product._id %>" class="stretched-link"><h5 class="card-title"><%= product.title %></h5></a>
-                        <p class="card-text">₱<%= product.price %></p>
+                        <p class="card-text">₱<%= product.price.toLocaleString() %></p>
                     </div>
                 </div>
             <% } %> 
