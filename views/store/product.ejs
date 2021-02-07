@@ -13,7 +13,10 @@
 <body>
     <%- include('./navbar'); %>
     <div class="container">
-        <div class="row mt-5 ms-5 me-5 row-bg shadow-sm ">
+        <% if(error.length){ %>
+            <div class="mt-5 ms-5 me-5 alert alert-danger"><%= error %> </div>
+        <% } %> 
+        <div class="row mt-5 ms-5 me-5 row-bg shadow-sm">
             <div class="col-sm-5 d-flex justify-content-center">
                 <img src="<%= product.img %>" class="img-fluid" width="100%" style="object-fit: cover;">
             </div>
@@ -25,22 +28,18 @@
                     <b>OUT OF STOCK</b> 
                 <% }else{ %> 
                     <b>AVAILABLE</b>
-                <% } %> 
-                
-                <form method="POST" class="mt-5" action="/cart/add/<%=product._id.toString()%>"> 
-                    <input type="hidden" value="quantity">
-                    <div>
-                        <input class="mb-2 number-input" type="number" value="1"> 
-                    </div>
-                    <div>
-                        <input type="submit" value="Add to Cart" class="btn btn-dark">
-                    </div>
-                </form>
-                
+                    <form method="POST" class="mt-5" action="/cart/add/<%=product._id.toString()%>"> 
+                        <div>
+                            <input class="mb-2 number-input" type="number" name="quantity" value="1"> 
+                        </div>
+                        <div>
+                            <input type="submit" value="Add to Cart" class="btn btn-dark">
+                        </div>
+                    </form>
+                <% } %>   
                 <div class="row mt-5 d-flex align-items-center" >
                     <%- product.desc %> 
                 </div>
-                
             </div>
         </div>
         <div class="row mt-5 ms-5 me-5 row-bg shadow-sm ">

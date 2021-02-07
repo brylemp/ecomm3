@@ -41,6 +41,7 @@ router.get('/cart', async (req,res)=>{
 
 router.post('/cart/add/:id', async (req,res)=>{
     const product = await productModel.findById(req.params.id)
+    const {quantity} = req.body
     if(!req.session.cart){
         const cart = await cartModel.create({
             items: [],
@@ -55,25 +56,32 @@ router.post('/cart/add/:id', async (req,res)=>{
         }
     })
 
-    if(itemExists){
-        itemExists.quantity++
-        req.flash('message',`Added ${product.title}`)
-        cart.markModified('items');
-        cart.save()
+    if(product.stock > quantity){
+        if(itemExists){
+            itemExists.quantity = itemExists.quantity + quantity
+            req.flash('message',`Added ${quantity} more of ${product.title} to cart`)
+            cart.markModified('items');
+            cart.save()
+        }
+        else{
+            const item = {
+                productId: product._id,
+                quantity: 1,
+            }
+            req.flash('message',`Added ${quantity} ${product.title} to cart`)
+            cart.items.push(item)
+            cart.save()
+        }
+        product.stock = product.stock - quantity
+        product.save()
+        
+        res.redirect('/cart')
     }
     else{
-        const item = {
-            productId: product._id,
-            quantity: 1,
-        }
-        cart.items.push(item)
-        cart.save()
+        req.flash('error', 'You are buying more than available stock')
+        res.redirect(`/product/${req.params.id}`)
     }
-    product.stock--;
-    product.save()
-
     
-    res.redirect('/cart')
 })
 
 module.exports = router

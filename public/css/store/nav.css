@@ -5,3 +5,7 @@
 body{
     background-color: rgb(238, 238, 238);
 }
+
+input#searchInput[type="text"]:focus {
+    outline: none;
+}
