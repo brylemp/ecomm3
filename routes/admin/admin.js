@@ -4,7 +4,6 @@ const express = require('express')
 const crypto = require('crypto')
 const util = require('util')
 
-const axios = require('axios')
 const multer  = require('multer')
 const upload = multer({ dest: 'uploads/' })
 
