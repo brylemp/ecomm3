@@ -14,7 +14,8 @@ router.get('/cart/clear', async (req,res)=>{
 router.get('/cart', async (req,res)=>{
     if(!req.session.cart){
         const cart = await cartModel.create({
-            items: []
+            items: [],
+            owner: req.sessionID
         })
         req.session.cart = cart
         res.render('./store/cart',{items:[]})
@@ -39,6 +40,13 @@ router.get('/cart', async (req,res)=>{
 
 router.post('/cart/add/:id', async (req,res)=>{
     const product = await productModel.findById(req.params.id)
+    if(!req.session.cart){
+        const cart = await cartModel.create({
+            items: [],
+            owner: req.sessionID
+        })
+        req.session.cart = cart
+    }
     const cart = await cartModel.findOne({_id:req.session.cart._id})
     const itemExists = cart.items.find((item)=>{
         if(item.productId.toString() === req.params.id){
