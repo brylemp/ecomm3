@@ -18,7 +18,11 @@
             <label><%= (errors.length===0)?(''):((errors.title)?(errors.title.msg):('')) %></label>
         </div>
         <div class="desc">
-            <textarea type="text" name="desc" id="editor" rows="10"><%= (errors.desc)?(errors.desc.value):(details.desc) %></textarea>
+            <textarea type="text" name="details" id="details" rows="10"><%= (errors.details)?(errors.details.value):(details.details) %></textarea>
+            <label><%= (errors.length===0)?(''):((errors.details)?(errors.details.msg):('')) %></label>
+        </div>
+        <div>
+            <input type="text" type="text" name="desc" id="desc" placeholder="desc" value="<%= (errors.desc)?(errors.desc.value):(details.desc) %>" >
             <label><%= (errors.length===0)?(''):((errors.desc)?(errors.desc.msg):('')) %></label>
         </div>
         <div>
@@ -49,7 +53,7 @@
     <script src="https://cdn.ckeditor.com/ckeditor5/24.0.0/classic/ckeditor.js"></script>
     <script>
         ClassicEditor
-            .create( document.querySelector( '#editor' ) )
+            .create( document.querySelector( '#details' ) )
             .catch( error => {
                 console.error( error );
             } ); 

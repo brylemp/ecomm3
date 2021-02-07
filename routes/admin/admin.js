@@ -52,6 +52,7 @@ router.post('/admin/product/add', upload.single('file'), getOld, productValidati
                 const product = await productModel.create({ 
                     title: details.title, 
                     desc: details.desc, 
+                    details: details.details,
                     price: details.price, 
                     img: response.data.data.link
                 })
@@ -61,6 +62,7 @@ router.post('/admin/product/add', upload.single('file'), getOld, productValidati
             const product = await productModel.create({ 
                 title: details.title, 
                 desc: details.desc, 
+                details: details.details,
                 price: details.price, 
                 img: details.img
             })
@@ -89,6 +91,7 @@ router.post('/admin/product/edit/:id', upload.single('file'), getOld, productVal
     else{
         product.title = details.title 
         product.desc = details.desc 
+        product.details = details.details
         product.price = details.price
         product.stock = details.stock
         if(req.file){
@@ -144,8 +147,6 @@ router.get('/admin/product/feature/delete/:id', isNotAuthenticated, async (req,r
     const fproduct = await featuredProductModel.deleteOne({_id:id})
     res.redirect('/admin/product/feature/add')
 })
-
-
 
 // router.post('/admin/createaccount',async (req,res)=>{
 //     const salt = crypto.randomBytes(64)

@@ -15,7 +15,7 @@
     <div class="container">
         <div class="row mt-5 ms-5 me-5 row-bg shadow-sm ">
             <div class="col-sm-5 d-flex justify-content-center">
-                <img src="<%= product.img %>" class="img-fluid" width="100%" alt="...">
+                <img src="<%= product.img %>" class="img-fluid" width="100%" style="object-fit: cover;">
             </div>
             <div class="col-sm-7 mt-5 mb-5">
                 <h1><%= product.title %></h1>
@@ -43,6 +43,13 @@
                 
             </div>
         </div>
+        <div class="row mt-5 ms-5 me-5 row-bg shadow-sm ">
+            <h2 class="mt-5 ms-4">Product Details</h2>
+            <div class="desc ms-5 mt-3 mb-5">
+                <p><%- product.details %></p>
+            </div>
+        </div>
     </div>   
+    <%- include('./footer'); %>
 </body>
 </html>

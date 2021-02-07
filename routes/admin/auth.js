@@ -15,7 +15,6 @@ router.get('/admin/login', isAuthenticated, async (req,res)=>{
 
 router.post('/admin/login',loginValidation, async (req,res)=>{
     const errors = validationResult(req);
-    
     if (!errors.isEmpty()) {
         console.log(errors.mapped())
         res.render('./admin/login',{errors:errors.mapped()})
@@ -23,7 +22,6 @@ router.post('/admin/login',loginValidation, async (req,res)=>{
     else{
         res.redirect('/admin')
     }
-    
 })
 
 router.get('/admin/logout', async(req,res)=>{
