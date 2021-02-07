@@ -2,6 +2,7 @@ const express = require('express')
 const session = require('express-session')
 const mongoose = require('mongoose')
 const MongoStore = require('connect-mongo')(session);
+const flash = require('connect-flash')
 require('dotenv').config()
 
 const authRouter = require('./routes/admin/auth')
@@ -22,6 +23,7 @@ app.use(session({
     cookie: { secure: false }
 }));
 
+app.use(flash())
 app.use(express.urlencoded({extended:true}))
 app.use(express.json())
 app.use(authRouter)

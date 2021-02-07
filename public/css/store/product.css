@@ -1,6 +1,5 @@
 .row-bg{
-    background-color: white
-    box-shadow: 0px grey;
+    background-color: white;
 }
 
 img.product-img{
@@ -21,4 +20,8 @@ img.product-img{
     margin-left: 2%;
     height: 100%;
     padding-top:1%;  
+}
+
+input.number-input[type=number]{
+    width: 10%;
 }

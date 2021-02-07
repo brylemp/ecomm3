@@ -18,6 +18,7 @@ router.get('/cart', async (req,res)=>{
             owner: req.sessionID
         })
         req.session.cart = cart
+        
         res.render('./store/cart',{items:[]})
     }
     else{
@@ -34,7 +35,7 @@ router.get('/cart', async (req,res)=>{
         for(let item of items){
             item.quantity = quantities[items.indexOf(item)]
         }
-        res.render('./store/cart',{items})
+        res.render('./store/cart',{message:req.flash('message'),sessionId:req.sessionID,items})
     }
 })
 
@@ -56,6 +57,7 @@ router.post('/cart/add/:id', async (req,res)=>{
 
     if(itemExists){
         itemExists.quantity++
+        req.flash('message',`Added ${product.title}`)
         cart.markModified('items');
         cart.save()
     }
@@ -70,7 +72,7 @@ router.post('/cart/add/:id', async (req,res)=>{
     product.stock--;
     product.save()
 
-    // console.log(cart)
+    
     res.redirect('/cart')
 })
 
