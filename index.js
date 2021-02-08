@@ -39,4 +39,6 @@ app.get('*', function(req, res){
     res.redirect('/error')
 });
 
-app.listen(3000,()=> console.log('Connected to port 3000'))
+const PORT = process.env.PORT || 3000;
+
+app.listen(PORT,()=> console.log('Connected to port 3000'))
