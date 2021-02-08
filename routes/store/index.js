@@ -12,6 +12,11 @@ router.get('/', async (req,res)=>{
     res.render('./store/index',{products,fproducts})
 })
 
+router.get('/search/', async(req,res)=>{
+    const products = await productModel.find({ 'title' : { '$regex' : req.query.itemToSearch, '$options' : 'i' } }).limit(12)
+    res.render('./store/search',{products})
+})
+
 router.get('/product/:id', async (req,res)=>{
     const { id } = req.params
     try{
