@@ -1,3 +1,29 @@
 input.number-input[type=number]{
     width: 10%;
 }
+
+i#deleteIcon{
+    color: rgb(0, 0, 0);
+}
+
+button#deleteButton{
+    outline: none;
+}
+
+button#deleteButton {
+    background: none;
+    border: none;
+    color: blue;
+    text-decoration: underline;
+    cursor: pointer;
+    font-size: 1em;
+    font-family: serif;
+}
+
+button#deleteButton:focus {
+    outline: none;
+}
+
+button#deleteButton:active {
+    color:red;
+}

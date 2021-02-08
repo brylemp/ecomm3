@@ -12,68 +12,73 @@
 </head>
 <body>
     <%- include('./navbar'); %>
-    <div class="container">
+    <div class="container" style="height:90vh">
         <div class="row mt-2 pt-5 d-flex justify-content-center">
-                <% if(items.length!==0){ %>
-                    <% if(message.length > 0){ %>
-                        <div class="alert alert-success">
-                            <%= message %> 
-                        </div>
-                    <% } %> 
-                    <div class="col-md-7">
-                        <% for(let item of items){ %>
-                            <div class="card border border-0 rounded-0 w-100 mb-2">
-                                <div class="row shadow-sm g-0">
-                                    <div class="col-md-3 d-flex justify-content-center">
-                                        <img src="<%= item.img %>" class="mt-2 mb-2 img-fluid" width="70%" alt="...">
-                                    </div>
-                                    <div class="col-md-9">
-                                        <div class="card-body d-flex justify-content-between align-items-center" style="height: 100%;">
-                                            <div class="col-md-4 align-self-center">
-                                                <h5 class="card-title"> <%= item.title %> </h5>
-                                            </div>
-                                            <input class="number-input" type="number" value="<%= item.quantity %>">  
-                                            <h5 class="card-text"> ₱<%= item.price.toLocaleString() %></h5>
+            <% if(items.length!==0){ %>
+                <% if(message.length > 0){ %>
+                    <div class="alert alert-success">
+                        <%= message %> 
+                    </div>
+                <% } %> 
+                <div class="col-md-7">
+                    <% for(let item of items){ %>
+                        <div class="card border border-0 rounded-0 w-100 mb-2">
+                            <div class="row shadow-sm g-0">
+                                <div class="col-md-3 d-flex justify-content-center">
+                                    <img src="<%= item.img %>" class="mt-2 mb-2 img-fluid" width="70%" alt="...">
+                                </div>
+                                <div class="col-md-9">
+                                    <div class="card-body d-flex justify-content-between align-items-center" style="height: 100%;">
+                                        <div class="col-md-4 align-self-center">
+                                            <h5 class="card-title"> <%= item.title %> </h5>
                                         </div>
+                                        <input class="number-input" type="number" value="<%= item.quantity %>">  
+                                        <h5 class="card-text"> ₱<%= item.price.toLocaleString() %></h5>
+                                        <form method="POST" action="/cart/delete/<%= item._id %>" >
+                                            <button id="deleteButton"><i id="deleteIcon" class="las la-trash-alt" style="font-size: 25px;"></i></button>
+                                        </form>
                                     </div>
                                 </div>
                             </div>
-                        <% } %> 
-                    </div>
-                    <div class="col-md-5">
-                        <div class="card rounded-0 w-100">
-                            <h3 class="card-title me-5 ms-5 mt-5 mb-5" >Checkout Summary</h3>
-                            <ul class="list-group rounded-0">
-                                <% let total=0 %> 
-                                <% for(let item of items){ %> 
-                                    <% total=total+(item.price*item.quantity) %> 
-                                    <li class="list-group-item d-flex justify-content-between">
-                                        <%= item.title %> 
-                                        <div></div>
-                                        ₱<%= item.price.toLocaleString() %> x <%= item.quantity %> = ₱<%= (item.price*item.quantity).toLocaleString() %> 
-                                    </li>
-                                <% } %>
-                                <li class="list-group-item d-flex justify-content-between">
-                                    <h5>Delivery Fee</h5>
-                                    <div></div>
-                                    ₱<%= 100 %> 
-                                </li>
-                                <li class="list-group-item d-flex justify-content-between">
-                                    <h4>Total</h4>
-                                    <div></div>
-                                    <b>₱<%= (total+100).toLocaleString() %></b> 
-                                </li>
-                            </ul>
                         </div>
-                        <div class="mt-2 d-flex justify-content-end">
-                            <form action="/checkout/<%- sessionId %>" method="POST">
-                                <button class="me-2 btn btn-dark" type="submit">Checkout</button>
-                            </form>
-                        </div>
+                    <% } %> 
+                </div>
+                <div class="col-md-5">
+                    <div class="card rounded-0 w-100">
+                        <h3 class="card-title me-5 ms-5 mt-5 mb-5" >Checkout Summary</h3>
+                        <ul class="list-group rounded-0">
+                            <% let total=0 %> 
+                            <% for(let item of items){ %> 
+                                <% total=total+(item.price*item.quantity) %> 
+                                <li class="list-group-item d-flex justify-content-between">
+                                    <%= item.title %> 
+                                    <div></div>
+                                    ₱<%= item.price.toLocaleString() %> x <%= item.quantity %> = ₱<%= (item.price*item.quantity).toLocaleString() %> 
+                                </li>
+                            <% } %>
+                            <li class="list-group-item d-flex justify-content-between">
+                                <h5>Delivery Fee</h5>
+                                <div></div>
+                                ₱<%= 100 %> 
+                            </li>
+                            <li class="list-group-item d-flex justify-content-between">
+                                <h4>Total</h4>
+                                <div></div>
+                                <b>₱<%= (total+100).toLocaleString() %></b> 
+                            </li>
+                        </ul>
                     </div>
-                <% }else{ %>
+                    <div class="mt-2 d-flex justify-content-end">
+                        <form action="/checkout/<%- sessionId %>" method="POST">
+                            <button class="me-2 btn btn-dark" type="submit">Checkout</button>
+                        </form>
+                    </div>
+                </div>
+            <% }else{ %>
+                <div>
                     <h1>Cart is Empty</h1>
-                <% } %>  
+                </div>
+            <% } %>  
         </div>
     </div>
     <%- include('./footer'); %>

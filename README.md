@@ -14,6 +14,7 @@ This is a simple virtual e-commerce website that is built with Nodejs, Express, 
   - Customer Side
     - View items on the cart
     - Add items to cart
+    - Remove item from cart
 
 # Technology
 
@@ -24,5 +25,6 @@ This is a simple virtual e-commerce website that is built with Nodejs, Express, 
   - EJS
   - Bootstrap
   - Imgur Api
+  - Line Awesome
   
     

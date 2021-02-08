@@ -56,9 +56,9 @@ router.post('/cart/add/:id', async (req,res)=>{
         }
     })
 
-    if(product.stock > quantity){
+    if(product.stock >= quantity){
         if(itemExists){
-            itemExists.quantity = itemExists.quantity + quantity
+            itemExists.quantity = parseInt(itemExists.quantity) + parseInt(quantity)
             req.flash('message',`Added ${quantity} more of ${product.title} to cart`)
             cart.markModified('items');
             cart.save()
@@ -72,7 +72,6 @@ router.post('/cart/add/:id', async (req,res)=>{
             cart.items.push(item)
             cart.save()
         }
-        product.stock = product.stock - quantity
         product.save()
         
         res.redirect('/cart')
@@ -81,7 +80,21 @@ router.post('/cart/add/:id', async (req,res)=>{
         req.flash('error', 'You are buying more than available stock')
         res.redirect(`/product/${req.params.id}`)
     }
-    
+})
+
+router.post('/cart/delete/:id', async (req,res)=>{
+    const productId = req.params.id
+    const cart = await cartModel.findById(req.session.cart._id)  
+    const newItems = cart.items.filter(item=>{
+        if(item.productId.toString()!==productId){
+            return item
+        }
+    })
+    cart.items = newItems
+    cart.markModified('items');
+    cart.save()
+    req.flash('message', 'Removed product from cart')
+    res.redirect('/cart')
 })
 
 module.exports = router

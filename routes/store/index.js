@@ -7,7 +7,7 @@ const { keyToIndex } = require('../helpers')
 const router = express.Router()
 
 router.get('/', async (req,res)=>{
-    const products = await productModel.find()
+    const products = await productModel.find().sort({'date': -1}).limit(12);
     const fproducts = await featuredProductModel.find()
     res.render('./store/index',{products,fproducts})
 })
