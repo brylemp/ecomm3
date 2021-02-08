@@ -4,6 +4,7 @@ const productModel = require('../../models/product')
 const cartModel = require('../../models/cart')
 const { keyToIndex } = require('../helpers')
 const { json } = require('express')
+const product = require('../../models/product')
 
 const router = express.Router()
 
@@ -24,19 +25,24 @@ router.get('/cart', async (req,res)=>{
     }
     else{
         const cart = await cartModel.findById(req.session.cart._id)
-        let tempItems = keyToIndex('productId',cart.items)
-        let ids = []
-        let quantities = []
-        for(let id in tempItems){
-            ids.push(id)
-            quantities.push(tempItems[id].quantity)
+        const ids = cart.items.map(item => {
+            return item.productId
+        })
+
+        const products = await productModel.find().where('_id').in(ids).exec();
+        const newProducts = products.map(product => {
+            return product.toObject()
+        })
+
+        for(let product of newProducts){  
+            for(let item of cart.items){
+                if(product._id.toString()===item.productId.toString()){
+                    product.quantity = item.quantity
+                }
+            }
         }
-        
-        const items = await productModel.find().where('_id').in(ids).exec();
-        for(let item of items){
-            item.quantity = quantities[items.indexOf(item)]
-        }
-        res.render('./store/cart',{message:req.flash('message'),cartId:req.session.cart._id,items})
+
+        res.render('./store/cart',{message:req.flash('message'),cartId:req.session.cart._id,items:newProducts})
     }
 })
 
@@ -50,7 +56,7 @@ router.post('/cart/add/:id', async (req,res)=>{
         })
         req.session.cart = cart
     }
-    const cart = await cartModel.findOne({_id:req.session.cart._id})
+    const cart = await cartModel.findById(req.session.cart._id)
     const itemExists = cart.items.find((item)=>{
         if(item.productId.toString() === req.params.id){
             return item
@@ -67,10 +73,11 @@ router.post('/cart/add/:id', async (req,res)=>{
         else{
             const item = {
                 productId: product._id,
-                quantity: 1,
+                quantity: parseInt(quantity),
             }
             req.flash('message',`Added ${quantity} ${product.title} to cart`)
             cart.items.push(item)
+            cart.markModified('items');
             cart.save()
         }
         console.log(cart)
