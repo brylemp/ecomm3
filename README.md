@@ -12,6 +12,7 @@ This is a simple virtual e-commerce website that is built with Nodejs, Express, 
     - Change the featured banner on the website's homepage
   
   - Customer Side
+    - Search for products
     - View items on the cart
     - Add items to cart
     - Remove item from cart
