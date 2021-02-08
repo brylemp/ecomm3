@@ -25,8 +25,6 @@ router.get('/admin', isNotAuthenticated, async (req,res)=>{
 
 router.get('/admin/clearpictures', isNotAuthenticated, async (req,res)=>{
     const imagePath = path.join(__dirname, '..', '..', 'uploads');
-    // const image = fs.readdirSync(imagePath);
-    // console.log(image)
     fs.rmdirSync(imagePath, { recursive: true });
     res.redirect('/admin')
 })
@@ -55,6 +53,8 @@ router.post('/admin/product/add', upload.single('file'), getOld, productValidati
                     price: details.price, 
                     img: response.data.data.link
                 })
+                const imagePath = path.join(__dirname, '..', '..', 'uploads');
+                fs.rmdirSync(imagePath, { recursive: true });
             })
         }
         else{
