@@ -49,17 +49,54 @@
         </div>
     </div>
     <div class="container">
-        <div class="row justify-content-center pt-5 pb-5">
+        <div class="row justify-content-center mt-5 mb-5">
             <h3 class="mb-4" style="margin-left: 10%;">Our Products</h1>
             <% for(let product of products){ %> 
-                <div class="card ms-3 mb-3" style="width: 18rem;">
-                    <img src="<%= product.img %>" class="card-img-top" alt="...">
+                <div class="card ms-2 me-2 mb-3 pb-3 rounded-0 shadow-sm" style="width: 18rem;">
+                    <img src="<%= product.img %>" class="card-img-top">
                     <div class="card-body">
-                        <a href="/product/<%= product._id %>" class="stretched-link"><h5 class="card-title"><%= product.title %></h5></a>
+                        <a href="/product/<%= product._id %>" class="stretched-link product-link"><h5 class="card-title"><%= product.title %></h5></a>
                         <p class="card-text">₱<%= product.price.toLocaleString() %></p>
                     </div>
                 </div>
             <% } %> 
+            <nav>
+                <ul class="pagination justify-content-end me-5">
+                    <% if(parseInt(pageNum) === 1){ %> 
+                        <li class="page-item disabled">
+                            <a class="page-link" href="/page/<%= parseInt(pageNum)-1 %>">
+                                <span aria-hidden="true">&laquo;</span>
+                            </a>
+                        </li>
+                    <% }else{ %>
+                        <li class="page-item">
+                            <a class="page-link" href="#">
+                                <span aria-hidden="true">&laquo;</span>
+                            </a>
+                        </li>
+                    <% } %> 
+                    <% for(let i=1;i<=Math.ceil(count/12);i++ ){ %>
+                        <% if(parseInt(pageNum) === i){ %>
+                            <li class="page-item active"><a class="page-link" href="/page/<%= i %>"><%= i %> </a></li>
+                        <% }else{ %>  
+                            <li class="page-item"><a class="page-link" href="/page/<%= i %>"><%= i %> </a></li>
+                        <% } %> 
+                    <% } %>  
+                    <% if(parseInt(pageNum) === Math.ceil(count/12)){ %> 
+                        <li class="page-item disabled">
+                            <a class="page-link" href="#">
+                                <span aria-hidden="true">&raquo;</span>
+                            </a>
+                        </li>
+                    <% }else{ %>
+                        <li class="page-item">
+                            <a class="page-link" href="/page/<%= parseInt(pageNum)+1 %>">
+                                <span aria-hidden="true">&raquo;</span>
+                            </a>
+                        </li>
+                    <% } %> 
+                </ul>
+            </nav>
         </div>
     </div>
     <%- include('./footer'); %>

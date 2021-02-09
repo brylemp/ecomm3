@@ -2,3 +2,11 @@
     width: 50%;
 }
 
+a.product-link{
+    color: black;
+}
+
+div.card:hover{
+    width: 18.5rem !important;
+    transition: width 0.15s ease-out;
+}

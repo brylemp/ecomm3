@@ -42,9 +42,7 @@ function changeQuantity(e){
     },3000)
 }
 
-
 const cartDiv = document.querySelector('#cartItems')
 for(let child of cartDiv.children){
     child.children[0].children[1].children[0].children[1].addEventListener('change',changeQuantity)
 }
-// cartItems.children[0].children[0].children[1].children[0].children[1]
