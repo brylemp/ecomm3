@@ -9,16 +9,15 @@ const router = express.Router()
 router.get('/', async (req,res)=>{
     const products = await productModel.find().sort({title: 1}).limit(12);
     const fproducts = await featuredProductModel.find()
-    res.render('./store/index',{products,fproducts,pageNum:1})
+    const count = await productModel.countDocuments();
+    res.render('./store/index',{products,fproducts,pageNum:1,count})
 })
 
 router.get('/page/:pageNum', async (req,res)=>{
     const { pageNum } = req.params
     const products = await productModel.find().sort({title: 1}).skip(parseInt(pageNum-1)*12).limit(12);
     const fproducts = await featuredProductModel.find()
-
     const count = await productModel.countDocuments();
-
     res.render('./store/index',{products,fproducts,pageNum,count})
 })
 
